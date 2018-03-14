@@ -82,11 +82,28 @@ namespace Catmash.Service
         }
 
 
+        /// <summary>Retourne tous les chats.</summary>
+        /// <returns>Une liste de tous les chats</returns>
         public async Task<List<CatDto>> GetAllAsync()
         {
             await InitIfNecessary();
 
             return await _context.Cats.Select(c => ToDto(c)).ToListAsync();
+        }
+
+        /// <summary>Retourne deux chats ayant le moins de votes.</summary>
+        /// <returns>Une liste de deux chats</returns>
+        public async Task<List<CatDto>> GetNextAsync()
+        {
+            await InitIfNecessary();
+
+            IQueryable<Cat> cats =
+                from c in _context.Cats
+                let votes = (c.VoteDown + c.VoteUp)
+                orderby votes
+                select c;
+
+            return await cats.Take(2).Select(c => ToDto(c)).ToListAsync();
         }
 
         public async Task<bool> Save(CatDto dto)
@@ -110,6 +127,9 @@ namespace Catmash.Service
             return true;
         }
 
+        /// <summary>Vote +1 pour un chat, -1 pour un autre.</summary>
+        /// <param name="vote">Le vote</param>
+        /// <returns>Vrai si l'opération a réussi</returns>
         public async Task<bool> Vote(VoteDto vote)
         {
             await InitIfNecessary();

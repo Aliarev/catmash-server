@@ -19,10 +19,16 @@ namespace Catmash.WebApi.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("All")]
         public async Task<List<CatDto>> GetAll()
         {
             return await _catService.GetAllAsync();
+        }
+
+        [HttpGet("Next")]
+        public async Task<List<CatDto>> GetNext()
+        {
+            return await _catService.GetNextAsync();
         }
 
         [HttpPost("Vote")]
