@@ -2,7 +2,7 @@
 {
     public class VoteDto
     {
-        public long IdDown { get; set; }
-        public long IdUp { get; set; }
+        public int IdDown { get; set; }
+        public int IdUp { get; set; }
     }
 }
